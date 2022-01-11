@@ -317,8 +317,8 @@ class Message implements JsonSerializable
             $return['customGrouping'] = $this->customGrouping;
         }
 
-        if( null !== $this->customgrouping2 ){
-            $return['customgrouping2'] = $this->customgrouping2;
+        if( null !== $this->customGrouping2 ){
+            $return['customGrouping2'] = $this->customGrouping2;
         }
 
         return (object)$return;
