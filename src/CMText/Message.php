@@ -26,6 +26,8 @@ class Message implements JsonSerializable
     /**
      * @var string Grouping field for message statistics
      */
+    private $customGrouping;
+    private $customgrouping2;
     private $customgrouping3;
 
     /**
@@ -136,6 +138,8 @@ class Message implements JsonSerializable
                 $this->{$name} = $value ?? self::SENDER_FALLBACK;;
                 break;
 
+            case 'customGrouping':
+            case 'customgrouping2':
             case 'minimumNumberOfMessageParts':
             case 'maximumNumberOfMessageParts':
             case 'reference':
@@ -299,6 +303,14 @@ class Message implements JsonSerializable
 
         if( null !== $this->dcs ){
             $return['dcs'] = $this->dcs;
+        }
+
+        if( null !== $this->customGrouping ){
+            $return['customGrouping'] = $this->customGrouping;
+        }
+
+        if( null !== $this->customgrouping2 ){
+            $return['customgrouping2'] = $this->customgrouping2;
         }
 
         return (object)$return;
