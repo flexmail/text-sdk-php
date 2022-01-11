@@ -24,10 +24,18 @@ class Message implements JsonSerializable
     private $body;
 
     /**
-     * @var string Grouping field for message statistics
+     * @var string Grouping field 1 for message statistics
      */
     private $customGrouping;
-    private $customgrouping2;
+
+    /**
+     * @var string Grouping field 2 for message statistics
+     */
+    private $customGrouping2;
+
+    /**
+     * @var string Grouping field 3 for message statistics
+     */
     private $customgrouping3;
 
     /**
@@ -139,7 +147,7 @@ class Message implements JsonSerializable
                 break;
 
             case 'customGrouping':
-            case 'customgrouping2':
+            case 'customGrouping2':
             case 'minimumNumberOfMessageParts':
             case 'maximumNumberOfMessageParts':
             case 'reference':
