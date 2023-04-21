@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/cmdotcom/text-sdk-php.svg?branch=master)](https://travis-ci.com/cmdotcom/text-sdk-php)
+[![GitHub Workflow](https://github.com/cmdotcom/text-sdk-php/actions/workflows/main.yml/badge.svg)](https://github.com/cmdotcom/text-sdk-php/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/cmdotcom/text-sdk-php/branch/master/graph/badge.svg)](https://codecov.io/gh/cmdotcom/text-sdk-php)
 [![Packagist](https://img.shields.io/packagist/dm/cmdotcom/text-sdk-php)](https://packagist.org/packages/cmdotcom/text-sdk-php)
 
@@ -9,13 +9,15 @@ A software development kit to provide ways to interact with CM.com's Text servic
 
 ### Requirements
 
-- php 7.* or 8.0
+- php 7.* or 8.0 or 8.1 or 8.2
 
 
 ## Usage
 
 ### Instantiate the client
 Using your unique `ApiKey` (or product token) which authorizes you on the CM platform. Always keep this key secret!
+
+The product token can be found in the [Channels](https://www.cm.com/app/channels) application on the platform, under the `Gateway` section.
 
 ```php
 $client = new \CMText\TextClient('your-api-key');
@@ -166,6 +168,83 @@ $message
                         1
                     )
                 ]
+            )
+        )
+    );
+$result = $client->send( [$message] );
+```
+
+## Sending WhatsApp interactive messages
+It is now possible to send list messages and reply buttons without using templates
+only supported in WhatsApp
+
+```php
+$client = new TextClient('your-api-key');
+$message = new Message('Message Text', 'Sender_name', ['Recipient_PhoneNumber']);
+$message
+    ->WithChannels([Channels::WHATSAPP])
+    ->WithRichMessage(
+        new WhatsAppInteractiveMessage(
+            new WhatsAppInteractiveContent(
+                WhatsAppInteractiveContentTypes::LIST,
+                new WhatsAppInteractiveHeader(
+                    WhatsAppInteractiveHeaderTypes::TEXT,
+                    'List message example'
+                ),
+                new WhatsAppInteractiveBody('checkout our list message demo'),
+                new WhatsAppInteractiveListAction(
+                    'Descriptive list title',
+                    [new WhatsAppInteractiveSection(
+                        'Select an option',
+                        [new WhatsAppInteractiveSectionRow(
+                            'unique title 1',
+                            rand(),
+                            'description text'
+                        ),new WhatsAppInteractiveSectionRow(
+                            'unique title 2',
+                            rand()
+                        )]
+                    )]
+                ),
+                new WhatsAppInteractiveFooter('footer text')
+            )
+        )
+    );
+$result = $client->send( [$message] );
+```
+
+Only with Reply buttons you can send media like image,video or document
+see following example.
+
+```php
+$client = new TextClient('your-api-key');
+$message = new Message('Message Text', 'Sender_name', ['Recipient_PhoneNumber']);
+$message
+    ->WithChannels([Channels::WHATSAPP])
+    ->WithRichMessage(
+        new WhatsAppInteractiveMessage(
+            new WhatsAppInteractiveContent(
+                WhatsAppInteractiveContentTypes::BUTTON,
+                new WhatsAppInteractiveHeader(
+                    WhatsAppInteractiveHeaderTypes::IMAGE,
+                    null,
+                    new MediaContent(
+                        'media name',
+                        'media.url',
+                        'mime/type'
+                    )
+                ),
+                new WhatsAppInteractiveBody('checkout our list message demo'),
+                new WhatsAppInteractiveButtonAction(
+                    [new WhatsAppInteractiveReplyButton(
+                        'button 1 reply-text',
+                        rand()
+                    ),new WhatsAppInteractiveReplyButton(
+                        'button 2 title',
+                        rand()
+                    )]
+                ),
+                new WhatsAppInteractiveFooter('footer text')
             )
         )
     );
