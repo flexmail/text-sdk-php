@@ -32,7 +32,7 @@ class TextClient implements ITextClient
     /**
      * SDK Version constant
      */
-    const VERSION = '2.2.1';
+    const VERSION = '3.0.2';
 
 
     /**
@@ -70,7 +70,7 @@ class TextClient implements ITextClient
         string $message,
         string $from,
         array $to,
-        string $reference = null
+        ?string $reference = null
     )
     {
         // send it out instantly
@@ -111,6 +111,7 @@ class TextClient implements ITextClient
                 ],
                 CURLOPT_TIMEOUT => 20,
                 CURLOPT_CONNECTTIMEOUT => 5,
+                CURLOPT_FORBID_REUSE => true,
             ]);
 
             $response = curl_exec($ch);
@@ -124,9 +125,6 @@ class TextClient implements ITextClient
         }catch (\Exception $exception){
             $response = json_encode(['details' => $exception->getMessage()]);
             $statuscode = TextClientStatusCodes::UNKNOWN;
-
-        }finally{
-            curl_close($ch);
         }
 
         $return = new TextClientResult($statuscode, $response);

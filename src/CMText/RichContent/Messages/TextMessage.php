@@ -2,31 +2,34 @@
 
 namespace CMText\RichContent\Messages;
 
+use CMText\RichContent\Messages\WhatsApp\WhatsAppMessageContextTrait;
+
 /**
  * Class TextMessage
  * @package CMText\RichContent\Messages
  */
 class TextMessage implements IRichMessage
 {
+    use WhatsAppMessageContextTrait;
 
     /**
      * @var string Body text of the message
      */
-    protected $text;
+    public $text;
 
 
     /**
      * @var string Instagram message tag (optional)
      */
-    protected $tag;
+    public $tag;
 
 
     /**
      * TextMessage constructor.
      * @param string $Text
-     * @param string $Tag
+     * @param string|null $Tag
      */
-    public function __construct(string $Text, string $Tag = '')
+    public function __construct(string $Text, ?string $Tag = null)
     {
         $this->text = $Text;
         $this->tag = $Tag;
@@ -36,9 +39,6 @@ class TextMessage implements IRichMessage
 	#[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        return (object)array_filter([
-            'text' => $this->text,
-            'tag' => $this->tag
-        ]);
+        return $this;
     }
 }
